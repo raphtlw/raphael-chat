@@ -1,9 +1,8 @@
 FROM python:3-slim-buster
 
-RUN apt-get -qq update && apt-get -qq install curl
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
 WORKDIR /app
 COPY . .
+RUN pip install poetry
 RUN poetry install
 
 ENTRYPOINT [ "python", "brain" ]
