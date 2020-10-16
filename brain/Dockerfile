@@ -4,7 +4,7 @@ WORKDIR /app
 COPY . .
 
 RUN apt-get -qq update && apt-get -qq install gcc g++ python3-dev pkg-config curl
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -- -y
+RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN pip install poetry
 RUN poetry install --no-interaction --no-ansi
