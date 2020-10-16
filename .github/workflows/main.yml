@@ -23,6 +23,7 @@ jobs:
       - name: Configure docker credentials
         run: gcloud auth configure-docker
       - name: Build
+        working-directory: brain
         run: docker build . -t gcr.io/$PROJECT_ID/brain
       - name: Push
         run: docker push gcr.io/$PROJECT_ID/brain
