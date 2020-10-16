@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "raphael"
+version = "0.1.0"
+description = ""
+authors = ["Raphael Tang <raphpb1912@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+transformers = "^3.3.1"
+tensorflow = "^2.3.1"
+fastapi = "^0.61.1"
+uvicorn = "^0.12.1"
+
+[tool.poetry.dev-dependencies]
+black = {version = "^20.8b1", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
