@@ -9,6 +9,9 @@ from transformers import (
     TFTrainingArguments,
 )
 from fastapi import FastAPI, WebSocket
+from pydantic import BaseModel
+import uvicorn
+import os
 
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")
 model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
@@ -58,57 +61,61 @@ app = FastAPI()
 #     print("{}: {}".format(i, tokenizer.decode(output, skip_special_tokens=True)))
 
 
-@app.websocket("/ws")
-async def websocket(websocket: WebSocket):
-    await websocket.accept()
+class RootBody(BaseModel):
+    prompt: str
 
-    turns = []
 
-    while True:
-        user_message = await websocket.receive_text()
-        print(user_message)
-        if max_turns_history == 0:
-            turns = []
-            continue
-        # A single turn is a group of user messages and bot responses right after
-        turn = {"user_messages": [], "bot_messages": []}
-        turns.append(turn)
-        turn["user_messages"].append(user_message)
-        # Merge turns into a single prompt (don't forget delimiter)
-        prompt = ""
-        from_index = (
-            max(len(turns) - max_turns_history - 1, 0) if max_turns_history >= 0 else 0
-        )
-        for turn in turns[from_index:]:
-            # Each turn begins with user messages
-            for user_message in turn["user_messages"]:
-                prompt += user_message + tokenizer.eos_token
-            for bot_message in turn["bot_messages"]:
-                prompt += bot_message + tokenizer.eos_token
+@app.post("/")
+async def root(body: RootBody):
+    # turns = []
 
-        # generate bot messages
-        input_ids = tokenizer.encode(prompt, return_tensors="tf")
+    # print(user_message)
+    # if max_turns_history == 0:
+    #     turns = []
+    #     continue
+    # # A single turn is a group of user messages and bot responses right after
+    # turn = {"user_messages": [], "bot_messages": []}
+    # turns.append(turn)
+    # turn["user_messages"].append(user_message)
+    # # Merge turns into a single prompt (don't forget delimiter)
+    # prompt = ""
+    # from_index = (
+    #     max(len(turns) - max_turns_history - 1, 0) if max_turns_history >= 0 else 0
+    # )
+    # for turn in turns[from_index:]:
+    #     # Each turn begins with user messages
+    #     for user_message in turn["user_messages"]:
+    #         prompt += user_message + tokenizer.eos_token
+    #     for bot_message in turn["bot_messages"]:
+    #         prompt += bot_message + tokenizer.eos_token
 
-        bot_outputs = model.generate(
-            input_ids,
-            min_length=1,
-            max_length=128,
-            num_beams=1,
-            early_stopping=False,
-            no_repeat_ngram_size=0,
-            num_return_sequences=1,
-            repetition_penalty=1.0,
-            length_penalty=1.0,
-            do_sample=True,
-            use_cache=True,
-            top_k=40,
-            temperature=0.7,
-            top_p=1.0,
-        )
+    # generate bot messages
+    input_ids = tokenizer.encode(body.prompt, return_tensors="tf")
 
-        bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
-        bot_message = bot_message[len(prompt) :][: -len(tokenizer.eos_token)]
+    bot_outputs = model.generate(
+        input_ids,
+        min_length=1,
+        max_length=128,
+        num_beams=1,
+        early_stopping=False,
+        no_repeat_ngram_size=0,
+        num_return_sequences=1,
+        repetition_penalty=1.0,
+        length_penalty=1.0,
+        do_sample=True,
+        use_cache=True,
+        top_k=40,
+        temperature=0.7,
+        top_p=1.0,
+    )
 
-        print("Bot >>> ", bot_message)
-        await websocket.send_text(bot_message)
-        turn["bot_messages"].append(bot_message)
+    bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
+    bot_message = bot_message[len(body.prompt) :][: -len(tokenizer.eos_token)]
+
+    print("Bot >>> ", bot_message)
+
+    return {"response": bot_message}
+    # turn["bot_messages"].append(bot_message)
+
+
+uvicorn.run(app, host="0.0.0.0", port=os.getenv("PORT", 8080), reload=False)
