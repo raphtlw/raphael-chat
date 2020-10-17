@@ -72,6 +72,6 @@ bot.telegram.setWebhook("https://telegram-5g5wk2xfdq-as.a.run.app/webhook");
 bot.startWebhook("/webhook", null, 8443, "0.0.0.0");
 
 interface Turn {
-  userMessages: string[];
-  botMessages: string[];
+  user_messages: string[];
+  bot_messages: string[];
 }
