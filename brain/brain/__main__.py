@@ -11,7 +11,7 @@ import os
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")
 model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
 # file_path = "./data.txt"
-max_turns_history = 1
+# max_turns_history = 1
 app = FastAPI()
 
 
@@ -109,7 +109,7 @@ async def root(body: RootBody):
 
     print("Bot >>> ", bot_message)
 
-    return {"response": bot_message}
+    return {"bot_message": bot_message}
     # turn["bot_messages"].append(bot_message)
 
 
