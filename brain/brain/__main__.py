@@ -3,8 +3,11 @@ from transformers import (
     AutoTokenizer,
     TFAutoModelForCausalLM,
 )
-from fastapi import FastAPI, WebSocket
-from pydantic import BaseModel
+
+# from fastapi import FastAPI, WebSocket
+# from pydantic import BaseModel
+import asyncio
+import websockets
 import uvicorn
 import os
 
@@ -12,7 +15,7 @@ tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 # file_path = "./data.txt"
 max_turns_history = 1
-app = FastAPI()
+# app = FastAPI()
 
 
 # training_args = TFTrainingArguments(
@@ -60,14 +63,12 @@ app = FastAPI()
 #     prompt: str
 
 
-@app.websocket("/")
-async def root(websocket: WebSocket):
-    await websocket.accept()
-
+# @app.websocket("/")
+async def root(websocket, path):
     turns = []
 
     while True:
-        user_message = await websocket.receive_text()
+        user_message = await websocket.recv()
 
         print(f"User >>> {user_message}")
         if max_turns_history == 0:
@@ -114,18 +115,21 @@ async def root(websocket: WebSocket):
 
         print(f"Bot >>> {bot_message}")
 
-        await websocket.send_text(bot_message)
+        await websocket.send(bot_message)
         turn["bot_messages"].append(bot_message)
 
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(
-            app,
-            host="0.0.0.0",
-            port=os.getenv("PORT", 80),
-            reload=False,
-            access_log=True,
-        )
+        # uvicorn.run(
+        #     app,
+        #     host="0.0.0.0",
+        #     port=os.getenv("PORT", 80),
+        #     reload=False,
+        #     access_log=True,
+        # )
+        start_server = websockets.serve(root, "0.0.0.0", 80)
+        asyncio.get_event_loop().run_until_complete(start_server)
+        asyncio.get_event_loop().run_forever()
     except TypeError as err:
         print("Logging error")
