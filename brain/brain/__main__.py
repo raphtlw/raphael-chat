@@ -59,7 +59,7 @@ max_turns_history = 2
 
 
 class RootBody(BaseModel):
-    turns: List[Dict[str, List[str]]]
+    turns: List[dict]
     user_message: str
 
 

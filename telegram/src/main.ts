@@ -3,7 +3,7 @@ import { Telegraf, Extra } from "telegraf";
 import got from "got";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-const EOS_TOKEN = "<|endoftext|>";
+// const EOS_TOKEN = "<|endoftext|>";
 // let maxTurnsHistory = 2;
 let turns: Turn[] = [];
 
