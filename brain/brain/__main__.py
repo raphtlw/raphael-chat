@@ -113,4 +113,11 @@ async def root(body: RootBody):
     # turn["bot_messages"].append(bot_message)
 
 
-uvicorn.run(app, host="0.0.0.0", port=os.getenv("PORT", 8080), reload=False)
+if __name__ == "__main__":
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=os.getenv("PORT", 8080),
+        reload=False,
+        access_log=False,
+    )
