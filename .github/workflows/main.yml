@@ -51,7 +51,7 @@ jobs:
         run: docker push gcr.io/$PROJECT_ID/brain
       - name: Deploy
         run: |
-          gcloud compute instances update-container brain --region asia-southeast1 \
+          gcloud compute instances update-container brain --zone asia-southeast1-b \
           --container-image gcr.io/$PROJECT_ID/brain:latest
   telegram:
     name: Build and deploy telegram
