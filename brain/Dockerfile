@@ -7,6 +7,7 @@ RUN apt-get -qq update && apt-get -qq install gcc g++ python3-dev pkg-config cur
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN pip install poetry
-RUN poetry install --no-interaction --no-ansi
+RUN poetry config virtualenvs.create false && \
+  poetry install --no-interaction --no-ansi &&
 
 ENTRYPOINT [ "python", "brain" ]
