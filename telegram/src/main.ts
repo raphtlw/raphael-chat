@@ -58,6 +58,7 @@ async function chat(message: string) {
 bot.on("text", async (ctx) => {
   try {
     if (ctx.chat.type === "private") {
+      ctx.telegram.sendChatAction(ctx.chat.id, "typing");
       console.log(`Recieved: ${ctx.message.text} (private)`);
       const reply = await chat(ctx.message.text);
       await ctx.reply(reply);
