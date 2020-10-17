@@ -123,4 +123,4 @@ if __name__ == "__main__":
             access_log=True,
         )
     except TypeError as err:
-        print(err)
+        print("Logging error")
