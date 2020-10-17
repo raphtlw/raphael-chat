@@ -8,8 +8,8 @@ from pydantic import BaseModel
 import uvicorn
 import os
 
-tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-small")
-model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-small")
+tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
+model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 # file_path = "./data.txt"
 # max_turns_history = 1
 app = FastAPI()
