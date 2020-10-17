@@ -35,21 +35,28 @@ async function chat(message: string) {
     }
   }
 
-  const botMessage = await got.post(process.env.BRAIN_URL, {
-    json: { prompt: prompt },
-    responseType: "json",
-  });
+  const botMessage = await (async () => {
+    const response = await got.post<{ bot_message: string }>(
+      process.env.BRAIN_URL,
+      {
+        json: { prompt: prompt },
+        responseType: "json",
+      }
+    );
+    return response.body.bot_message;
+  })();
 
-  console.log(botMessage.body);
+  turn.botMessages.push(botMessage);
 
-  return "test";
+  return botMessage;
 }
 
-bot.on("text", (ctx) => {
+bot.on("text", async (ctx) => {
   try {
     if (ctx.chat.type === "private") {
       console.log(`Recieved: ${ctx.message.text} (private)`);
-      chat(ctx.message.text).then((reply: string) => ctx.reply(reply));
+      const reply = await chat(ctx.message.text);
+      await ctx.reply(reply);
     }
   } catch (e) {
     console.log(e);
