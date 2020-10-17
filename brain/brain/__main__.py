@@ -93,15 +93,15 @@ async def root(body: RootBody):
         max_length=128,
         num_beams=1,
         early_stopping=False,
-        no_repeat_ngram_size=0,
+        no_repeat_ngram_size=2,
         num_return_sequences=1,
-        repetition_penalty=1.2,
+        repetition_penalty=1.0,
         length_penalty=1.0,
         do_sample=True,
         use_cache=True,
         top_k=40,
         temperature=0.7,
-        top_p=0.4,
+        top_p=0.5,
     )
 
     bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
