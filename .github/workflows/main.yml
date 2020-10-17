@@ -52,7 +52,7 @@ jobs:
       - name: Deploy
         run: |
           gcloud compute instances update-container brain --zone asia-southeast1-b \
-          --container-image gcr.io/$PROJECT_ID/brain
+          --container-image gcr.io/$PROJECT_ID/brain:latest
   telegram:
     name: Build and deploy telegram
     runs-on: ubuntu-latest
