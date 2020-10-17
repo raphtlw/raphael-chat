@@ -8,6 +8,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN pip install poetry
 RUN poetry config virtualenvs.create false && \
-  poetry install --no-interaction --no-ansi &&
+  poetry install --no-interaction --no-ansi
 
 ENTRYPOINT [ "python", "brain" ]
