@@ -40,7 +40,7 @@ async function chat(message: string) {
     responseType: "json",
   });
 
-  console.log(botMessage);
+  console.log(botMessage.body);
 
   return "test";
 }
