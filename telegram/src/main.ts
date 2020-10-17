@@ -5,7 +5,7 @@ import got from "got";
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // const EOS_TOKEN = "<|endoftext|>";
 // let maxTurnsHistory = 2;
-let turns: Turn[] = [];
+let turns: Turn[] = [{ user_messages: [], bot_messages: [] }];
 
 bot.start((ctx) => {
   turns = [];
