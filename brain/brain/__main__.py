@@ -1,21 +1,17 @@
-from typing import Any
+from typing import Any, Dict, List
 from transformers import (
     AutoTokenizer,
     TFAutoModelForCausalLM,
 )
-
-# from fastapi import FastAPI, WebSocket
-# from pydantic import BaseModel
-import asyncio
-import websockets
+from fastapi import FastAPI, WebSocket
+from pydantic import BaseModel
 import uvicorn
 import os
 
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model: Any = TFAutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 # file_path = "./data.txt"
-max_turns_history = 1
-# app = FastAPI()
+app = FastAPI()
 
 
 # training_args = TFTrainingArguments(
@@ -59,77 +55,78 @@ max_turns_history = 1
 #     print("{}: {}".format(i, tokenizer.decode(output, skip_special_tokens=True)))
 
 
-# class RootBody(BaseModel):
-#     prompt: str
+max_turns_history = 2
 
 
-# @app.websocket("/")
-async def root(websocket, path):
-    turns = []
+class RootBody(BaseModel):
+    turns: List[Dict[str, List[str]]]
+    user_message: str
 
-    while True:
-        user_message = await websocket.recv()
 
-        print(f"User >>> {user_message}")
-        if max_turns_history == 0:
-            turns = []
-            continue
-        # A single turn is a group of user messages and bot responses right after
-        turn = {"user_messages": [], "bot_messages": []}
-        turns.append(turn)
-        turn["user_messages"].append(user_message)
-        # Merge turns into a single prompt (don't forget delimiter)
-        prompt = ""
-        from_index = (
-            max(len(turns) - max_turns_history - 1, 0) if max_turns_history >= 0 else 0
-        )
-        for turn in turns[from_index:]:
-            # Each turn begins with user messages
-            for user_message in turn["user_messages"]:
-                prompt += user_message + tokenizer.eos_token
-            for bot_message in turn["bot_messages"]:
-                prompt += bot_message + tokenizer.eos_token
+@app.post("/")
+async def root(body: RootBody):
+    turns = body.turns
+    user_message = body.user_message
 
-        # generate bot messages
-        input_ids = tokenizer.encode(prompt, return_tensors="tf")
+    print(f"User >>> {user_message}")
 
-        bot_outputs = model.generate(
-            input_ids,
-            min_length=1,
-            max_length=128,
-            num_beams=1,
-            early_stopping=False,
-            no_repeat_ngram_size=2,
-            num_return_sequences=1,
-            repetition_penalty=1.2,
-            length_penalty=1.0,
-            do_sample=True,
-            use_cache=True,
-            top_k=40,
-            temperature=0.7,
-            top_p=0.6,
-        )
+    # if max_turns_history == 0:
+    #     turns = []
+    #     continue
 
-        bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
-        bot_message = bot_message[len(prompt) :][: -len(tokenizer.eos_token)]
+    # A single turn is a group of user messages and bot responses right after
+    turn = {"user_messages": [], "bot_messages": []}
+    turns.append(turn)
+    turn["user_messages"].append(user_message)
+    # Merge turns into a single prompt (don't forget delimiter)
+    prompt = ""
+    from_index = (
+        max(len(turns) - max_turns_history - 1, 0) if max_turns_history >= 0 else 0
+    )
+    for turn in turns[from_index:]:
+        # Each turn begins with user messages
+        for user_message in turn["user_messages"]:
+            prompt += user_message + tokenizer.eos_token
+        for bot_message in turn["bot_messages"]:
+            prompt += bot_message + tokenizer.eos_token
 
-        print(f"Bot >>> {bot_message}")
+    # generate bot messages
+    input_ids = tokenizer.encode(prompt, return_tensors="tf")
 
-        await websocket.send(bot_message)
-        turn["bot_messages"].append(bot_message)
+    bot_outputs = model.generate(
+        input_ids,
+        min_length=1,
+        max_length=128,
+        num_beams=1,
+        early_stopping=False,
+        no_repeat_ngram_size=2,
+        num_return_sequences=1,
+        repetition_penalty=1.2,
+        length_penalty=1.0,
+        do_sample=True,
+        use_cache=True,
+        top_k=40,
+        temperature=0.7,
+        top_p=0.6,
+    )
+
+    bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
+    bot_message = bot_message[len(prompt) :][: -len(tokenizer.eos_token)]
+
+    print(f"Bot >>> {bot_message}")
+    turn["bot_messages"].append(bot_message)
+
+    return {"turns": turns, "bot_message": bot_message}
 
 
 if __name__ == "__main__":
     try:
-        # uvicorn.run(
-        #     app,
-        #     host="0.0.0.0",
-        #     port=os.getenv("PORT", 80),
-        #     reload=False,
-        #     access_log=True,
-        # )
-        start_server = websockets.serve(root, "0.0.0.0", 80)
-        asyncio.get_event_loop().run_until_complete(start_server)
-        asyncio.get_event_loop().run_forever()
+        uvicorn.run(
+            app,
+            host="0.0.0.0",
+            port=os.getenv("PORT", 80),
+            reload=False,
+            access_log=True,
+        )
     except TypeError as err:
         print("Logging error")

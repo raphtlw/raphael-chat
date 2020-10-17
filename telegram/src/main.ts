@@ -1,29 +1,23 @@
 require("dotenv").config();
 import { Telegraf, Extra } from "telegraf";
-import WebSocket from "ws";
+import got from "got";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
-// const EOS_TOKEN = "<|endoftext|>";
+const EOS_TOKEN = "<|endoftext|>";
 // let maxTurnsHistory = 2;
-// let turns: Turn[] = [];
+let turns: Turn[] = [];
 
 bot.start((ctx) => {
-  // turns = [];
+  turns = [];
   ctx.reply("Hey, what's up?");
 });
 
-const ws = new WebSocket(process.env.BRAIN_URL);
-
-ws.on("open", () => {
-  console.log("Websocket opened");
-});
-
-function sendMessage(message: string) {
+async function chat(message: string) {
   // if (maxTurnsHistory === 0) {
   //   turns = [];
   //   return;
   // }
-  //
+
   // const turn: Turn = {
   //   userMessages: [],
   //   botMessages: [],
@@ -41,40 +35,33 @@ function sendMessage(message: string) {
   //     prompt += botMessage + EOS_TOKEN;
   //   }
   // }
-  //
-  // console.log(prompt);
-  //
-  // const botMessage = await (async () => {
-  //   const response = await got.post<{ bot_message: string }>(
-  //     process.env.BRAIN_URL,
-  //     {
-  //       json: { prompt: prompt },
-  //       responseType: "json",
-  //     }
-  //   );
-  //   return response.body.bot_message;
-  // })();
-  //
-  // turn.botMessages.push(botMessage);
 
-  ws.send(message, (err) => {
-    if (err) throw err;
-  });
+  // console.log(prompt);
+
+  const botMessage = await (async () => {
+    const response = await got.post<{ turns: Turn[]; bot_message: string }>(
+      process.env.BRAIN_URL,
+      {
+        json: { turns: turns, user_message: message },
+        responseType: "json",
+      }
+    );
+    turns = response.body.turns;
+    return response.body.bot_message;
+  })();
+
+  console.log(botMessage);
+
+  return botMessage;
 }
 
 bot.on("text", async (ctx) => {
   try {
     if (ctx.chat.type === "private") {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
-
       console.log(`Recieved: ${ctx.message.text} (private)`);
-      sendMessage(ctx.message.text);
-
-      ws.on("message", (data) => {
-        if (data instanceof String) {
-          ctx.reply(data as string);
-        }
-      });
+      const reply = await chat(ctx.message.text);
+      await ctx.reply(reply);
     }
   } catch (e) {
     console.log(e);
