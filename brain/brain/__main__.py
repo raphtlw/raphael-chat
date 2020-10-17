@@ -95,7 +95,7 @@ async def root(body: RootBody):
         early_stopping=False,
         no_repeat_ngram_size=2,
         num_return_sequences=1,
-        repetition_penalty=1.0,
+        repetition_penalty=1.2,
         length_penalty=1.0,
         do_sample=True,
         use_cache=True,
