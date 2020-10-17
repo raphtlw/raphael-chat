@@ -101,7 +101,7 @@ async def root(body: RootBody):
         use_cache=True,
         top_k=40,
         temperature=0.7,
-        top_p=1.0,
+        top_p=0.3,
     )
 
     bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)

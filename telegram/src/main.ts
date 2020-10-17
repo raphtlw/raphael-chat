@@ -4,11 +4,11 @@ import got from "got";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 const EOS_TOKEN = "<|endoftext|>";
-let maxTurnsHistory = 1;
+let maxTurnsHistory = 2;
 let turns: Turn[] = [];
 
 bot.start((ctx) => {
-  ctx.reply("Hi");
+  ctx.reply("Hey, what's up?");
 });
 
 async function chat(message: string) {
