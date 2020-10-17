@@ -28,4 +28,4 @@ jobs:
       - name: Push
         run: docker push gcr.io/$PROJECT_ID/brain
       - name: Deploy
-        run: gcloud run deploy brain --image gcr.io/$PROJECT_ID/brain --platform managed --region us-central1 --allow-unauthenticated
+        run: gcloud run deploy brain --image gcr.io/$PROJECT_ID/brain --platform managed --region asia-southeast1 --allow-unauthenticated
