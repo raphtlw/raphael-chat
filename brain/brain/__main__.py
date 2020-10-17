@@ -107,7 +107,7 @@ async def root(body: RootBody):
     bot_message: str = tokenizer.decode(bot_outputs[0], skip_special_tokens=False)
     bot_message = bot_message[len(body.prompt) :][: -len(tokenizer.eos_token)]
 
-    print("Bot >>> ", bot_message)
+    # print("Bot >>> ", bot_message)
 
     return {"bot_message": bot_message}
     # turn["bot_messages"].append(bot_message)

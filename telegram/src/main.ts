@@ -35,6 +35,8 @@ async function chat(message: string) {
     }
   }
 
+  console.log(prompt);
+
   const botMessage = await (async () => {
     const response = await got.post<{ bot_message: string }>(
       process.env.BRAIN_URL,
