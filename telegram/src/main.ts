@@ -46,6 +46,8 @@ async function chat(message: string) {
     return response.body.bot_message;
   })();
 
+  console.log(botMessage);
+
   turn.botMessages.push(botMessage);
 
   return botMessage;
