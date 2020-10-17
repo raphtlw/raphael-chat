@@ -8,6 +8,7 @@ let maxTurnsHistory = 2;
 let turns: Turn[] = [];
 
 bot.start((ctx) => {
+  turns = [];
   ctx.reply("Hey, what's up?");
 });
 
