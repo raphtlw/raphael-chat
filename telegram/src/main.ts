@@ -56,7 +56,7 @@ bot.on("text", (ctx) => {
   }
 });
 
-// bot.telegram.setWebhook("https://");
+bot.telegram.setWebhook("https://telegram-5g5wk2xfdq-as.a.run.app/webhook");
 bot.startWebhook("/webhook", null, 8443, "0.0.0.0");
 
 interface Turn {
