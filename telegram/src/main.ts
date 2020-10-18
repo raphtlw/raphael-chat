@@ -67,7 +67,7 @@ async function chat(turns: Turn[], message: string) {
 bot.on("text", async (ctx) => {
   try {
     // @ts-ignore
-    const turns = ctx.session.turns;
+    const turns = ctx.session.turns || [];
 
     if (ctx.chat.type === "private") {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
