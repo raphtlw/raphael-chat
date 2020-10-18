@@ -59,7 +59,7 @@ async function chat(turns: Turn[], message: string) {
     return { turns: res.body.turns, botMessage: res.body.bot_message };
   })();
 
-  console.log(`Bot response: ${botResponse}`);
+  console.log(`Bot response: ${JSON.stringify(botResponse)}`);
 
   return botResponse;
 }
