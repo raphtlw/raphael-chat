@@ -13,13 +13,12 @@ bot.use(session());
 bot.start((ctx) => {
   // @ts-ignore
   ctx.session.turns = [];
+  console.log(`Bot started in ${ctx.chat.type} chat`);
   if (ctx.chat.type === "private") {
-    console.log("Bot started in private chat");
     ctx.reply(
       "Hey, what's up? If I am getting annoying, type /start to restart me."
     );
   } else if (ctx.chat.type === "group" || ctx.chat.type === "supergroup") {
-    console.log(`Bot started in ${ctx.chat.type}`);
     ctx.reply(
       `Hey, what's up? If I am getting annoying, type /start to restart me.
       To talk to me, type @raph at the start of your message.`
