@@ -44,7 +44,7 @@ async function chat(turns: Turn[], message: string) {
 
   // console.log(prompt);
 
-  console.log(`Turns: ${turns}`);
+  console.log(`Turns: ${JSON.stringify(turns)}`);
   console.log(`User message: ${message}`);
 
   const botResponse = await (async () => {
