@@ -13,9 +13,16 @@ bot.use(session());
 bot.start((ctx) => {
   // @ts-ignore
   ctx.session.turns = [];
-  ctx.reply(
-    "Hey, what's up? If I am getting annoying, type /start to restart me."
-  );
+  if (ctx.chat.type === "private") {
+    ctx.reply(
+      "Hey, what's up? If I am getting annoying, type /start to restart me."
+    );
+  } else if (ctx.chat.type === "group") {
+    ctx.reply(
+      `Hey, what's up? If I am getting annoying, type /start to restart me.
+      To talk to me, type @raph at the start of your message.`
+    );
+  }
 });
 
 async function chat(turns: Turn[], message: string) {
@@ -73,6 +80,16 @@ bot.on("text", async (ctx) => {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
       console.log(`Recieved: ${ctx.message.text} (private)`);
       const reply = await chat(turns, ctx.message.text);
+      // @ts-ignore
+      ctx.session.turns = reply.turns;
+      await ctx.reply(reply.botMessage);
+    } else if (
+      ctx.chat.type === "group" &&
+      ctx.message.text.startsWith("@raph ")
+    ) {
+      ctx.telegram.sendChatAction(ctx.chat.id, "typing");
+      console.log(`Recieved: ${ctx.message.text} (group - ${ctx.chat.title})`);
+      const reply = await chat(turns, ctx.message.text.replace("@raph ", ""));
       // @ts-ignore
       ctx.session.turns = reply.turns;
       await ctx.reply(reply.botMessage);
