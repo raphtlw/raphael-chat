@@ -44,6 +44,9 @@ async function chat(turns: Turn[], message: string) {
 
   // console.log(prompt);
 
+  console.log(`Turns: ${turns}`);
+  console.log(`User message: ${message}`);
+
   const botResponse = await (async () => {
     const res = await got.post<{ turns: Turn[]; bot_message: string }>(
       process.env.BRAIN_URL,
@@ -56,7 +59,7 @@ async function chat(turns: Turn[], message: string) {
     return { turns: res.body.turns, botMessage: res.body.bot_message };
   })();
 
-  console.log(botResponse);
+  console.log(`Bot response: ${botResponse}`);
 
   return botResponse;
 }
