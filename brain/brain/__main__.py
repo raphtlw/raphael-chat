@@ -90,6 +90,8 @@ async def root(body: RootBody):
         for bot_message in turn["bot_messages"]:
             prompt += bot_message + tokenizer.eos_token
 
+    print(f"Prompt: {prompt}")
+
     # generate bot messages
     input_ids = tokenizer.encode(prompt, return_tensors="tf")
 
