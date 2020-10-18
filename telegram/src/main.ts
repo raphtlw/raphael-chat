@@ -3,7 +3,9 @@ import { Telegraf, Extra, session } from "telegraf";
 import got from "got";
 import { TelegrafContext } from "telegraf/typings/context";
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf(process.env.BOT_TOKEN, {
+  username: "raphtlw_clone_bot",
+});
 // const EOS_TOKEN = "<|endoftext|>";
 // let maxTurnsHistory = 2;
 // let turns: Turn[] = [];
