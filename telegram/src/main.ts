@@ -22,8 +22,7 @@ bot.start((ctx) => {
     );
   } else if (ctx.chat.type === "group" || ctx.chat.type === "supergroup") {
     ctx.reply(
-      `Hey, what's up? If I am getting annoying, type /start to restart me.
-      To talk to me, type @raph at the start of your message.`
+      "Hey, what's up? If I am getting annoying, type /start to restart me. To talk to me, add @raph to the start of your message."
     );
   }
 });
@@ -86,7 +85,7 @@ bot.on("text", async (ctx) => {
       // @ts-ignore
       ctx.session.turns = reply.turns;
       await ctx.reply(reply.botMessage);
-    } else if (false) {
+    } else if (ctx.message.text.startsWith("@raph ")) {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
       console.log(`Recieved: ${ctx.message.text} (group - ${ctx.chat.title})`);
       const reply = await chat(turns, ctx.message.text.replace("@raph ", ""));
