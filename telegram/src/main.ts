@@ -19,7 +19,7 @@ bot.start((ctx) => {
       "Hey, what's up? If I am getting annoying, type /start to restart me."
     );
   } else if (ctx.chat.type === "group" || ctx.chat.type === "supergroup") {
-    console.log("Bot started in group");
+    console.log(`Bot started in ${ctx.chat.type}`);
     ctx.reply(
       `Hey, what's up? If I am getting annoying, type /start to restart me.
       To talk to me, type @raph at the start of your message.`
