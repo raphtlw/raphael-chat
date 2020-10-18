@@ -1,18 +1,24 @@
 require("dotenv").config();
-import { Telegraf, Extra } from "telegraf";
+import { Telegraf, Extra, session } from "telegraf";
 import got from "got";
+import { TelegrafContext } from "telegraf/typings/context";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 // const EOS_TOKEN = "<|endoftext|>";
 // let maxTurnsHistory = 2;
-let turns: Turn[] = [{ user_messages: [], bot_messages: [] }];
+// let turns: Turn[] = [];
+
+bot.use(session());
 
 bot.start((ctx) => {
-  turns = [];
-  ctx.reply("Hey, what's up?");
+  // @ts-ignore
+  ctx.session.turns = [];
+  ctx.reply(
+    "Hey, what's up? If I am getting annoying, type /start to restart me."
+  );
 });
 
-async function chat(message: string) {
+async function chat(turns: Turn[], message: string) {
   // if (maxTurnsHistory === 0) {
   //   turns = [];
   //   return;
@@ -38,30 +44,35 @@ async function chat(message: string) {
 
   // console.log(prompt);
 
-  const botMessage = await (async () => {
-    const response = await got.post<{ turns: Turn[]; bot_message: string }>(
+  const botResponse = await (async () => {
+    const res = await got.post<{ turns: Turn[]; bot_message: string }>(
       process.env.BRAIN_URL,
       {
         json: { turns: turns, user_message: message },
         responseType: "json",
       }
     );
-    turns = response.body.turns;
-    return response.body.bot_message;
+
+    return { turns: res.body.turns, botMessage: res.body.bot_message };
   })();
 
-  console.log(botMessage);
+  console.log(botResponse);
 
-  return botMessage;
+  return botResponse;
 }
 
 bot.on("text", async (ctx) => {
   try {
+    // @ts-ignore
+    const turns = ctx.session.turns;
+
     if (ctx.chat.type === "private") {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
       console.log(`Recieved: ${ctx.message.text} (private)`);
-      const reply = await chat(ctx.message.text);
-      await ctx.reply(reply);
+      const reply = await chat(turns, ctx.message.text);
+      // @ts-ignore
+      ctx.session.turns = reply.turns;
+      await ctx.reply(reply.botMessage);
     }
   } catch (e) {
     console.log(e);
