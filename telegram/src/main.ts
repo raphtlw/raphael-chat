@@ -17,7 +17,7 @@ bot.start((ctx) => {
     ctx.reply(
       "Hey, what's up? If I am getting annoying, type /start to restart me."
     );
-  } else if (ctx.chat.type === "group") {
+  } else if (ctx.chat.type === "group" || ctx.chat.type === "supergroup") {
     ctx.reply(
       `Hey, what's up? If I am getting annoying, type /start to restart me.
       To talk to me, type @raph at the start of your message.`
@@ -84,7 +84,7 @@ bot.on("text", async (ctx) => {
       ctx.session.turns = reply.turns;
       await ctx.reply(reply.botMessage);
     } else if (
-      ctx.chat.type === "group" &&
+      (ctx.chat.type === "group" || ctx.chat.type === "supergroup") &&
       ctx.message.text.startsWith("@raph ")
     ) {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
