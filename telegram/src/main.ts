@@ -99,11 +99,10 @@ bot.on("text", async (ctx) => {
       );
       console.log(`Replied: ${reply.botMessage}`);
     } else {
-      console.log(
-        `Recieved ${ctx.message.text} from ${ctx.message.chat.title}`
-      );
       return;
     }
+
+    console.log(`Recieved ${ctx.message.text} from ${ctx.message.chat.title}`);
   } catch (e) {
     console.log(e);
   }
