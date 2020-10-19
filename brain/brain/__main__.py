@@ -7,6 +7,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
 import os
+import random
 
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model: Any = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
@@ -28,6 +29,14 @@ async def root(body: RootBody):
 
     print(f"User >>> {user_message}")
 
+    if len(user_message) > 1024:
+        return {
+            "turns": turns,
+            "bot_message": random.choice(
+                ["bruh", "damn that's a long ass message", "stfu"]
+            ),
+        }
+
     # if max_turns_history == 0:
     #     turns = []
     #     continue
@@ -36,6 +45,7 @@ async def root(body: RootBody):
     turn = {"user_messages": [], "bot_messages": []}
     turns.append(turn)
     turn["user_messages"].append(user_message)
+
     # Merge turns into a single prompt (don't forget delimiter)
     prompt = ""
     from_index = (
