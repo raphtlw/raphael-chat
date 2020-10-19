@@ -85,13 +85,19 @@ bot.on("text", async (ctx) => {
       // @ts-ignore
       ctx.session.turns = reply.turns;
       await ctx.reply(reply.botMessage);
+      console.log(`Replied: ${reply.botMessage}`);
     } else if (ctx.message.text.startsWith("@raph ")) {
       ctx.telegram.sendChatAction(ctx.chat.id, "typing");
       console.log(`Recieved: ${ctx.message.text} (group - ${ctx.chat.title})`);
       const reply = await chat(turns, ctx.message.text.replace("@raph ", ""));
       // @ts-ignore
       ctx.session.turns = reply.turns;
-      await ctx.reply(reply.botMessage);
+      await ctx.reply(
+        reply.botMessage,
+        // @ts-ignore
+        Extra.inReplyTo(ctx.message.message_id)
+      );
+      console.log(`Replied: ${reply.botMessage}`);
     } else {
       console.log(
         `Recieved ${ctx.message.text} from ${ctx.message.chat.title}`
