@@ -9,7 +9,7 @@ import uvicorn
 import os
 
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
-model: Any = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
+model: Any = AutoModelForCausalLM.from_pretrained("model")
 app = FastAPI()
 
 
