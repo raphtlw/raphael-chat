@@ -8,11 +8,23 @@ from pydantic import BaseModel
 import uvicorn
 import os
 import random
+import torch.cuda, torch.quantization, torch.nn
+
 
 tokenizer: Any = AutoTokenizer.from_pretrained("microsoft/DialoGPT-medium")
 model: Any = AutoModelForCausalLM.from_pretrained("microsoft/DialoGPT-medium")
 app = FastAPI()
 
+print(f"CUDA is available: {torch.cuda.is_available()}")
+
+if model.device.type == "cpu" and not torch.cuda.is_available():
+    print("Quantizing model")
+    model = torch.quantization.quantize_dynamic(
+        model, {torch.nn.Linear, torch.nn.Embedding, torch.nn.Conv1d}, inplace=True
+    )
+# else:
+#     print("Moving model to GPU")
+#     model.to("cuda:0")
 
 max_turns_history = 2
 
