@@ -1,0 +1,57 @@
+on:
+  push:
+    branches:
+      - main
+      
+defaults:
+  run:
+    working-directory: ./app
+
+jobs:
+  build:
+    name: Build for linux and windows
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14
+      - name: Install dependencies
+        run: npm i
+      - name: Build
+        run: npm run build
+      - name: Upload artifact for next job
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: out/make/
+
+  release:
+    name: Package and Release
+    needs: [build]
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download artifact from previous job
+        uses: actions/download-artifact@v2
+        with:
+          name: build
+      - name: Package
+        run: |
+          zip -r linux.zip deb/x64/*.deb rpm/x64/symbit*.rpm zip/linux/x64/*.zip
+          zip -r windows.zip squirrel.windows/x64/*
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          project_id: ${{ secrets.GOOGLE_PROJECT_ID }}
+          service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          export_default_credentials: true
+      - name: Push packages to firebase cloud storage
+        run: gsutil cp linux.zip windows.zip "gs://${{ secrets.GOOGLE_PROJECT_ID }}.appspot.com/raphael-chat/releases"
