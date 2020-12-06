@@ -26,11 +26,12 @@ jobs:
         run: npm i
       - name: Build
         run: npm run build
+      - run: ls -lah
       - name: Upload artifact for next job
         uses: actions/upload-artifact@v2
         with:
           name: build
-          path: out/make/
+          path: ${{ github.workflow }}/out/make
 
   release:
     name: Package and Release
