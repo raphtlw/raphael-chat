@@ -6,7 +6,7 @@
   "description": "A chatbot clone of raphtlw",
   "main": "dist/build/main.js",
   "scripts": {
-    "postinstall": "npm --prefix src/render install",
+    "postinstall": "cd src/render && npm install",
     "start": "run-p start:*",
     "start:svelte": "npm --prefix src/render start",
     "start:electron": "tsc -p src/main && electron-forge start",
