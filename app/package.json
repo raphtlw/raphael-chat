@@ -15,6 +15,7 @@
     "name": "Raphael Tang",
     "email": "raphpb1912@gmail.com"
   },
+  "license": "MIT",
   "config": {
     "forge": {
       "packagerConfig": {
