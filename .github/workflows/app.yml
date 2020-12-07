@@ -43,10 +43,11 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build
+          path: ${{ github.workspace }}
       - name: Package
         run: |
-          zip -r linux.zip deb/x64/*.deb rpm/x64/symbit*.rpm zip/linux/x64/*.zip
-          zip -r windows.zip squirrel.windows/x64/*
+          zip -r linux.zip ${{ github.workspace }}/{deb/x64/*.deb,rpm/x64/symbit*.rpm,zip/linux/x64/*.zip}
+          zip -r windows.zip ${{ github.workspace }}/squirrel.windows/x64/*
       - name: Set up Google Cloud SDK
         uses: google-github-actions/setup-gcloud@master
         with:
