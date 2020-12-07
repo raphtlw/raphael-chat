@@ -2,20 +2,20 @@ import svelte from "rollup-plugin-svelte"
 import commonjs from "@rollup/plugin-commonjs"
 import resolve from "@rollup/plugin-node-resolve"
 import { terser } from "rollup-plugin-terser"
+import css from "rollup-plugin-css-only"
 import sveltePreprocess from "svelte-preprocess"
 import typescript from "@rollup/plugin-typescript"
-import css from "rollup-plugin-css-only"
 
 const production = !process.env.ROLLUP_WATCH
 
-/** @type {import("rollup").RollupOptions} */
-const options = {
-  input: "src/main.ts",
+/** @type {import('rollup').RollupOptions} */
+const config = {
+  input: "src/render.ts",
   output: {
     sourcemap: true,
     format: "iife",
     name: "app",
-    file: "../../dist/build/bundle.js",
+    file: "public/build/bundle.js",
   },
   plugins: [
     svelte({
@@ -53,4 +53,4 @@ const options = {
   },
 }
 
-export default options
+export default config

@@ -23,7 +23,7 @@
     background-color: var(--primary-color);
     border-radius: 0px 10px 10px 10px;
     width: fit-content;
-    max-width: 70%;
+    max-width: 70vw;
     color: white;
     margin-top: 0.2rem;
   }

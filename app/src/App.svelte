@@ -3,7 +3,7 @@
   import { onMount } from "svelte"
   import { ChatInput, Header, ChatMessage } from "./components"
   import type { Message } from "./global"
-  import { Author, remote, path, cp, fs } from "./global"
+  import { Author, remote, path, cp, fs, shell } from "./global"
 
   let messages: Message[] = []
   let modelLoaded = false
@@ -13,19 +13,30 @@
   onMount(async () => {
     console.log(
       `brain directory exists: ${fs.existsSync(
-        path.join(remote.app.getAppPath(), "dist", "brain")
+        path.join(remote.app.getAppPath(), "public", "brain")
       )}`
     )
+    // shell.exec(
+    //   `${path.join(
+    //     remote.app.getAppPath(),
+    //     "public",
+    //     "brain",
+    //     ".venv",
+    //     "bin",
+    //     "python"
+    //   )} ${path.join(remote.app.getAppPath(), "public", "brain", "brain.py")}`,
+    //   { async: true }
+    // )
     pyProcess = cp.spawn(
       path.join(
         remote.app.getAppPath(),
-        "dist",
+        "public",
         "brain",
         ".venv",
         "bin",
         "python"
       ),
-      [path.join(remote.app.getAppPath(), "dist", "brain", "brain.py")]
+      [path.join(remote.app.getAppPath(), "public", "brain", "brain.py")]
     )
     addMessage(
       Author.Bot,

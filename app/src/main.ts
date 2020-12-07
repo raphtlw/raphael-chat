@@ -10,7 +10,7 @@ if (require("electron-squirrel-startup")) {
   app.quit()
 }
 
-const brainPath = path.join(__dirname, "..", "brain")
+const brainPath = path.join(app.getAppPath(), "public", "brain")
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -35,6 +35,15 @@ function initWindow() {
       message: "Please install Python from https://www.python.org/downloads/",
     })
     eShell.openExternal("https://www.python.org/downloads/")
+    app.quit()
+  } else if (!shell.which("poetry")) {
+    // Check if poetry is installed
+    dialog.showMessageBoxSync(undefined, {
+      title: "Poetry is not installed",
+      message:
+        "Please install poetry from https://python-poetry.org/docs/#installation",
+    })
+    eShell.openExternal("https://python-poetry.org/docs/#installation")
     app.quit()
   } else if (!fs.existsSync(path.join(brainPath, ".venv"))) {
     // Install dependencies
@@ -73,9 +82,7 @@ app.on("activate", () => {
   }
 })
 
-// Enable live reload when in development
-require("electron-is-dev") &&
-  require("electron-reload")(__dirname, {
-    electron: path.join(app.getAppPath(), "node_modules", ".bin", "electron"),
-    awaitWriteFinish: true,
-  })
+// Hot reloading
+try {
+  require("electron-reloader")(module)
+} catch (_) {}
