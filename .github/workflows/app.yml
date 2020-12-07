@@ -56,4 +56,5 @@ jobs:
           service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           export_default_credentials: true
       - name: Push packages to firebase cloud storage
+        working-directory: ${{ github.workspace }}
         run: gsutil cp linux.zip windows.zip "gs://${{ secrets.GOOGLE_PROJECT_ID }}.appspot.com/raphael-chat/releases"
