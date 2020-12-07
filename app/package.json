@@ -19,16 +19,9 @@
   "config": {
     "forge": {
       "packagerConfig": {
-        "executableName": "raphael-chat",
-        "icon": "icon.png"
+        "executableName": "raphael-chat"
       },
       "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "app"
-          }
-        },
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
@@ -45,7 +38,9 @@
         },
         {
           "name": "@electron-forge/maker-squirrel",
-          "config": {}
+          "config": {
+            "iconUrl": "public/icons/win/icon.ico"
+          }
         }
       ]
     }

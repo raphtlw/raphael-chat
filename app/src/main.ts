@@ -22,6 +22,7 @@ function createWindow() {
       enableRemoteModule: true,
       worldSafeExecuteJavaScript: true,
     },
+    icon: path.join(app.getAppPath(), "public", "icon.png"),
   })
 
   mainWindow.loadFile(path.join(__dirname, "..", "index.html"))
