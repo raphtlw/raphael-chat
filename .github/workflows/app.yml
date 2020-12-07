@@ -9,7 +9,7 @@ defaults:
 
 jobs:
   build:
-    name: Build for linux and windows
+    name: Build
     runs-on: ${{ matrix.os }}
 
     strategy:
