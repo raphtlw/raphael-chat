@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { ChildProcessWithoutNullStreams } from "child_process"
   import { onMount } from "svelte"
-  import { ChatInput, Header, ChatMessage } from "./components"
+  import { ChatInput, Header, ChatMessage, TypingMessage } from "./components"
   import type { Message } from "./global"
   import { Author, remote, path, cp, fs, shell } from "./global"
 
@@ -9,6 +9,7 @@
   let modelLoaded = false
   let pyProcess: ChildProcessWithoutNullStreams
   let chatElem: HTMLDivElement
+  let typing = false
 
   onMount(async () => {
     console.log(
@@ -53,9 +54,11 @@
       if (message.includes("LOADING_COMPLETE")) {
         console.log("Model loaded")
         modelLoaded = true
+        addMessage(Author.Bot, "Model loading complete!")
       } else if (message.includes("BOT > ")) {
         const botResponse = message.split("\n")[1].replace("BOT > ", "")
         addMessage(Author.Bot, botResponse)
+        typing = false
       }
     })
   })
@@ -65,15 +68,12 @@
     requestAnimationFrame(() => window.scrollTo(0, document.body.scrollHeight))
   }
 
-  $: if (modelLoaded) {
-    addMessage(Author.Bot, "Model loading complete!")
-  }
-
   /**
    * Post a message to the python script
    */
   function sendMessage(text: string) {
     if (modelLoaded === true) {
+      typing = true
       addMessage(Author.User, text)
       pyProcess.stdin.write(`${text}\n`)
     }
@@ -105,6 +105,9 @@
     {#each messages as message}
       <ChatMessage {message} />
     {/each}
+    {#if typing}
+      <TypingMessage />
+    {/if}
   </div>
 
   <ChatInput onSubmit={sendMessage} />
