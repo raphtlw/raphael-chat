@@ -26,7 +26,8 @@
         {
           "name": "@electron-forge/maker-zip",
           "platforms": [
-            "linux"
+            "linux",
+            "darwin"
           ]
         },
         {
@@ -40,6 +41,12 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "format": "ULFO"
+          }
         }
       ]
     }
