@@ -13,6 +13,16 @@ if (require("electron-squirrel-startup")) {
 const brainPath = path.join(app.getAppPath(), "public", "brain")
 
 function createWindow() {
+  // Cross platform solution for icons
+  let icon: string
+  if (process.platform === "linux") {
+    icon = path.join(app.getAppPath(), "public", "icons", "png", "512x512.png")
+  } else if (process.platform === "win32") {
+    icon = path.join(app.getAppPath(), "public", "icons", "win", "icon.ico")
+  } else if (process.platform === "darwin") {
+    icon = path.join(app.getAppPath(), "public", "icons", "mac", "icon.icns")
+  }
+
   const mainWindow = new BrowserWindow({
     height: 500,
     width: 400,
@@ -22,7 +32,7 @@ function createWindow() {
       enableRemoteModule: true,
       worldSafeExecuteJavaScript: true,
     },
-    icon: path.join(app.getAppPath(), "public", "icon.png"),
+    icon,
   })
 
   mainWindow.loadFile(path.join(__dirname, "..", "index.html"))
