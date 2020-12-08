@@ -39,7 +39,7 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "iconUrl": "public/icons/win/icon.ico"
+            "iconUrl": "./public/icons/win/icon.ico"
           }
         }
       ]
