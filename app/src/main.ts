@@ -4,6 +4,8 @@ import { app, BrowserWindow, dialog, shell as eShell } from "electron"
 import * as path from "path"
 import * as shell from "shelljs"
 import * as fs from "fs"
+import * as agent from "superagent"
+import * as semver from "semver"
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -38,7 +40,22 @@ function createWindow() {
   mainWindow.loadFile(path.join(__dirname, "..", "index.html"))
 }
 
-function initWindow() {
+async function initWindow() {
+  // Check for updates
+  // ;(async () => {
+  //   const packageJson = await agent.get(
+  //     "https://rawcdn.githack.com/raphtlw/raphael-chat/b0f0d4345a1c2adc0f923feda722ebcaf3fdd709/app/package.json"
+  //   )
+  //   const repoVersion = JSON.parse(packageJson.body).version
+  //   const currentVersion = app.getVersion()
+  //   console.log(`Repository app version: ${repoVersion}`)
+  //   console.log(`Current app version: ${currentVersion}`)
+  //   if (semver.gt(repoVersion, currentVersion)) {
+  //     console.log(`Current version is less than repo version`)
+  //     dialog.showMessageBox('New update found')
+  //   }
+  // })()
+
   if (!shell.which("python3")) {
     // Check if Python 3 is installed
     dialog.showMessageBoxSync(undefined, {
@@ -97,3 +114,6 @@ app.on("activate", () => {
 try {
   require("electron-reloader")(module)
 } catch (_) {}
+
+// Automatically update
+require("update-electron-app")()

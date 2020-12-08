@@ -11,6 +11,7 @@
     "lint": "ts-node scripts/lint.ts",
     "format": "prettier --write ."
   },
+  "repository": "https://github.com/raphtlw/raphael-chat",
   "author": {
     "name": "Raphael Tang",
     "email": "raphpb1912@gmail.com"
@@ -53,7 +54,9 @@
     "@rollup/plugin-node-resolve": "^10.0.0",
     "@rollup/plugin-typescript": "^6.0.0",
     "@tsconfig/svelte": "^1.0.0",
+    "@types/semver": "^7.3.4",
     "@types/shelljs": "^0.8.8",
+    "@types/superagent": "^4.1.10",
     "@typescript-eslint/eslint-plugin": "^2.34.0",
     "@typescript-eslint/parser": "^2.34.0",
     "electron": "11.0.3",
@@ -76,6 +79,9 @@
   "dependencies": {
     "electron-forge-maker-appimage": "^22.9.1",
     "electron-squirrel-startup": "^1.0.0",
-    "shelljs": "^0.8.4"
+    "semver": "^7.3.4",
+    "shelljs": "^0.8.4",
+    "superagent": "^6.1.0",
+    "update-electron-app": "^2.0.1"
   }
 }
