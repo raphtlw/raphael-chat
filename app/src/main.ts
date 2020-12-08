@@ -42,19 +42,28 @@ function createWindow() {
 
 async function initWindow() {
   // Check for updates
-  // ;(async () => {
-  //   const packageJson = await agent.get(
-  //     "https://rawcdn.githack.com/raphtlw/raphael-chat/b0f0d4345a1c2adc0f923feda722ebcaf3fdd709/app/package.json"
-  //   )
-  //   const repoVersion = JSON.parse(packageJson.body).version
-  //   const currentVersion = app.getVersion()
-  //   console.log(`Repository app version: ${repoVersion}`)
-  //   console.log(`Current app version: ${currentVersion}`)
-  //   if (semver.gt(repoVersion, currentVersion)) {
-  //     console.log(`Current version is less than repo version`)
-  //     dialog.showMessageBox('New update found')
-  //   }
-  // })()
+  ;(async () => {
+    const packageJson = await agent.get(
+      "https://rawcdn.githack.com/raphtlw/raphael-chat/b0f0d4345a1c2adc0f923feda722ebcaf3fdd709/app/package.json"
+    )
+    const repoVersion = packageJson.body.version
+    const currentVersion = app.getVersion()
+    console.log(`Repository app version: ${repoVersion}`)
+    console.log(`Current app version: ${currentVersion}`)
+    if (semver.gt(repoVersion, currentVersion)) {
+      console.log(`Current version is less than repo version`)
+      dialog
+        .showMessageBox(undefined, {
+          message: "New update found",
+          buttons: ["OK", "Download"],
+        })
+        .then(res => {
+          if (res.response === 1) {
+            eShell.openExternal("https://raphtlw.now.sh/raphael-chat")
+          }
+        })
+    }
+  })()
 
   if (!shell.which("python3")) {
     // Check if Python 3 is installed
@@ -114,6 +123,3 @@ app.on("activate", () => {
 try {
   require("electron-reloader")(module)
 } catch (_) {}
-
-// Automatically update
-require("update-electron-app")()
