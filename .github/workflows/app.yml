@@ -55,7 +55,7 @@ jobs:
         run: |
           zip -r linux.zip ./zip/linux/x64/*.zip
           zip -r debian.zip ./deb/x64/*.deb
-          zip -r rpm.zip ./rpm/x64/symbit*.rpm
+          zip -r rpm.zip ./rpm/x64/raphael-chat*.rpm
           zip -r macos.zip ./zip/darwin/x64/*.zip ./*.dmg
           zip -r windows.zip ./squirrel.windows/x64/*
       # - name: Set up Google Cloud SDK
