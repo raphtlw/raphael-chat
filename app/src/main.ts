@@ -44,9 +44,9 @@ async function initWindow() {
   // Check for updates
   ;(async () => {
     const packageJson = await agent.get(
-      "https://rawcdn.githack.com/raphtlw/raphael-chat/b0f0d4345a1c2adc0f923feda722ebcaf3fdd709/app/package.json"
+      "https://raw.githubusercontent.com/raphtlw/raphael-chat/main/app/package.json"
     )
-    const repoVersion = packageJson.body.version
+    const repoVersion = JSON.parse(packageJson.text).version
     const currentVersion = app.getVersion()
     console.log(`Repository app version: ${repoVersion}`)
     console.log(`Current app version: ${currentVersion}`)
