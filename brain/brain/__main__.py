@@ -25,7 +25,7 @@ if model.device.type == "cpu" and not torch.cuda.is_available():
 #     print("Moving model to GPU")
 #     model.to("cuda:0")
 
-max_turns_history = 2
+max_turns_history = 1
 
 
 class RootBody(BaseModel):
