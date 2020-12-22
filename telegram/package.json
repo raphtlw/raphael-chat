@@ -14,7 +14,6 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "got": "^11.7.0",
-    "public-ip": "^4.0.3",
     "telegraf": "^3.38.0"
   }
 }

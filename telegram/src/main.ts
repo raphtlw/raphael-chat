@@ -3,7 +3,6 @@ import { Telegraf, Extra, session } from "telegraf"
 import { ExtraReplyMessage } from "telegraf/typings/telegram-types"
 import type { TelegrafContext } from "telegraf/typings/context"
 import got from "got"
-import publicIp from "public-ip"
 
 const bot = new Telegraf(process.env.BOT_TOKEN, {
   username: "raphtlw_clone_bot",
@@ -89,7 +88,6 @@ bot.on("text", async (ctx: TelegrafCtx) => {
   }
 })
 
-// bot.telegram.setWebhook(`http://${publicIp.v4()}/webhook`)
 bot.telegram.setWebhook(process.env.WEBHOOK_URL)
 bot.startWebhook("/webhook", null, 8443, "0.0.0.0")
 
