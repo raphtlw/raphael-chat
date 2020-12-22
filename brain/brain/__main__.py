@@ -6,7 +6,6 @@ from transformers import (
 from fastapi import FastAPI
 from pydantic import BaseModel
 import uvicorn
-import os
 import random
 import torch.cuda, torch.quantization, torch.nn
 
@@ -106,7 +105,7 @@ if __name__ == "__main__":
         uvicorn.run(
             app,
             host="0.0.0.0",
-            port=os.getenv("PORT", 80),
+            port=8080,
             reload=False,
             access_log=True,
         )

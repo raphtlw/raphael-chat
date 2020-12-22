@@ -11,5 +11,5 @@ RUN pip install poetry
 RUN poetry config virtualenvs.create false && \
     poetry install --no-interaction --no-ansi
 
-EXPOSE 80
+EXPOSE 8080
 ENTRYPOINT [ "python", "brain" ]
