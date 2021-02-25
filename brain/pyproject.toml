@@ -6,11 +6,11 @@ authors = ["Raphael Tang <raphpb1912@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-transformers = {extras = ["torch"], version = "^3.3.1"}
+transformers = "^4.3.3"
 fastapi = "^0.61.1"
 uvicorn = "^0.12.1"
 clean-text = {extras = ["gpl"], version = "^0.3.0"}
-torch = "^1.6.0"
+torch = "^1.7.1"
 
 [tool.poetry.dev-dependencies]
 black = {version = "^20.8b1", allow-prereleases = true}
